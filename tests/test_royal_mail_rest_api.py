@@ -13,7 +13,7 @@ from royal_mail_rest_api.errors import *
 
 
 @pytest.fixture
-def response(status_code):
+def http_response(status_code):
     """Sample pytest fixture.
 
     See more at: http://doc.pytest.org/en/latest/fixture.html
@@ -42,7 +42,21 @@ def test_command_line_interface():
     assert '--help  Show this message and exit.' in help_result.output
 
 
-def test_500_error(resonse):
-    response = {'status_code': 401}
+def test_500_error(http_resonse):
+    """
+    Test a response.status_code 500 rasies GeneralError
+    :param http_resonse:
+    :return:
+    """
     with pytest.raises(NotAuthorised):
-        RoyalMailBaseClass._test_error(response)
+        RoyalMailBaseClass._test_error(http_response(500))
+
+def test_401_error(http_response):
+    """
+    test 401 raises not authed
+    :param http_response:
+    :return:
+    """
+    with pytest.raises(NotAuthorised):
+        RoyalMailBaseClass._test_error(http_response(401))
+
