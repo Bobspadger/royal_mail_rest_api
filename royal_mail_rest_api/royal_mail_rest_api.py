@@ -2,10 +2,7 @@
 
 """Main module."""
 import requests
-
-class NotAuthorised(Exception):
-    pass
-
+from .errors import NotAuthorised
 
 
 class RoyalMailBaseClass():
@@ -33,7 +30,6 @@ class TrackingApi(RoyalMailBaseClass):
     pod_url = 'mailPieces/{}/proofOfDelivery'
     history_url = 'mailPieces/{}/history'
 
-
     def __init__(self, client_id, client_secret):
         """
         Instantiate, store client_id and secret, build headers
@@ -43,7 +39,6 @@ class TrackingApi(RoyalMailBaseClass):
         self.client_id = client_id
         self.client_secret = client_secret
         self._create_headers()
-
 
     def _create_headers(self):
         """
@@ -90,6 +85,7 @@ class TrackingApi(RoyalMailBaseClass):
         self._test_error(result)
         return result.json()
 
+
 if __name__ == '__main__':
     CLIENT_ID = ''
     CLIENT_SECRET = ''
@@ -102,5 +98,3 @@ if __name__ == '__main__':
     print(test_tracking)
     print(test_pod)
     print(history_tracking)
-
-
