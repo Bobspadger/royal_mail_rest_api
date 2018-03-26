@@ -32,12 +32,21 @@ class TrackingApi(RoyalMailBaseClass):
     summary_url = 'mailPieces/{}/summary'
 
     def __init__(self, client_id, client_secret):
+        """
+        Instantiate, store client_id and secret, build headers
+        :param client_id:
+        :param client_secret:
+        """
         self.client_id = client_id
         self.client_secret = client_secret
         self._create_headers()
 
 
     def _create_headers(self):
+        """
+        Create the required headers for interacting with the tracking api
+        :return: Nothing
+        """
         self.header = {'X-IBM-Client-Id': self.client_id,
                        'X-IBM-Client-Secret': self.client_secret,
                        'accept': 'application/json'}
