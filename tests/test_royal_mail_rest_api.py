@@ -7,19 +7,23 @@ import pytest
 
 from click.testing import CliRunner
 
-from royal_mail_rest_api import TrackingApi
+from royal_mail_rest_api import *
 from royal_mail_rest_api import cli
+from royal_mail_rest_api.errors import *
 
 
 @pytest.fixture
-def response():
+def response(status_code):
     """Sample pytest fixture.
 
     See more at: http://doc.pytest.org/en/latest/fixture.html
     """
     # import requests
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+    class response_mock():
+        status_code = status_code
 
+    return response_mock()
 
 def test_content(response):
     """Sample pytest test function with the pytest fixture as an argument."""
@@ -36,3 +40,9 @@ def test_command_line_interface():
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
+
+
+def test_500_error(resonse):
+    response = {'status_code': 401}
+    with pytest.raises(NotAuthorised):
+        RoyalMailBaseClass._test_error(response)
