@@ -49,7 +49,6 @@ class TrackingApi(RoyalMailBaseClass):
                        'X-IBM-Client-Secret': self.client_secret,
                        'accept': 'application/json'}
 
-
     def summary(self, tracking_number):
         """
         takes 13 digit tracking number and requests summary data
@@ -61,7 +60,6 @@ class TrackingApi(RoyalMailBaseClass):
         self._test_error(result)
         return result.json()
 
-
     def proof_of_delivery(self, tracking_number):
         """
         recover proof of delivery
@@ -72,7 +70,6 @@ class TrackingApi(RoyalMailBaseClass):
         result = requests.get('{}/{}'.format(self.url, pod_url), headers=self.header)
         self._test_error(result)
         return result.json()
-
 
     def history(self, tracking_number):
         """
