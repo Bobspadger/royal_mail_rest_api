@@ -1,6 +1,5 @@
 import requests
-from . import RoyalMailBaseClass
-
+from royal_mail_rest_api.api import RoyalMailBaseClass
 
 class TrackingApi(RoyalMailBaseClass):
     """
@@ -37,7 +36,7 @@ class TrackingApi(RoyalMailBaseClass):
         """
         summary_url = self.summary_url.format(tracking_number)
         result = requests.get('{}/{}'.format(self.url, summary_url), headers=self.header)
-        self._test_error(result)
+        result.raise_for_status()
         return result.json()
 
     def proof_of_delivery(self, tracking_number):
@@ -48,7 +47,7 @@ class TrackingApi(RoyalMailBaseClass):
         """
         pod_url = self.summary_url.format(tracking_number)
         result = requests.get('{}/{}'.format(self.url, pod_url), headers=self.header)
-        self._test_error(result)
+        result.raise_for_status()
         return result.json()
 
     def history(self, tracking_number):
@@ -59,7 +58,7 @@ class TrackingApi(RoyalMailBaseClass):
         """
         history_url = self.history_url.format(tracking_number)
         result = requests.get('{}/{}'.format(self.url, history_url), headers=self.header)
-        self._test_error(result)
+        result.raise_for_status()
         return result.json()
 
 
@@ -68,10 +67,22 @@ if __name__ == '__main__':
     CLIENT_SECRET = ''
     TRACKING_NUMBER = ''
     tracking_api = TrackingApi(CLIENT_ID, CLIENT_SECRET)
-    test_tracking = tracking_api.summary('13_digit_tracking_number')
-    test_pod = tracking_api.proof_of_delivery(TRACKING_NUMBER)
-    history_tracking = tracking_api.history(TRACKING_NUMBER)
 
-    print(test_tracking)
-    print(test_pod)
-    print(history_tracking)
+    try:
+        test_tracking = tracking_api.summary(TRACKING_NUMBER)
+        print(test_tracking)
+    except Exception as e:
+        print(e)
+
+    try:
+        test_pod = tracking_api.proof_of_delivery(TRACKING_NUMBER)
+        print(test_pod)
+    except Exception as e:
+        print(e)
+
+    try:
+        history_tracking = tracking_api.history(TRACKING_NUMBER)
+        print(history_tracking)
+    except Exception as e:
+        print(e)
+
