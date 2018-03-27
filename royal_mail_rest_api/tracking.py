@@ -63,11 +63,14 @@ class TrackingApi(RoyalMailBaseClass):
 
 
 if __name__ == '__main__':
-    CLIENT_ID = ''
-    CLIENT_SECRET = ''
-    TRACKING_NUMBER = ''
+    from royal_mail_rest_api.get_credentials import return_credentials
+    creds = return_credentials()
+    CLIENT_ID = creds['royal_mail']['CLIENT_ID']
+    CLIENT_SECRET = creds['royal_mail']['CLIENT_SECRET']
+    USERNAME = creds['royal_mail']['USERNAME']
+    PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
     tracking_api = TrackingApi(CLIENT_ID, CLIENT_SECRET)
-
+    TRACKING_NUMBER = '13digit royal mail tracking id'
     try:
         test_tracking = tracking_api.summary(TRACKING_NUMBER)
         print(test_tracking)

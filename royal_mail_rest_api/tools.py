@@ -136,6 +136,9 @@ class RoyalMailBody():
 
 
 if __name__ == '__main__':
+    from royal_mail_rest_api.get_credentials import return_credentials
+    creds = return_credentials()
+
     body = RoyalMailBody()
     body.add_ship_type('delivery')
     # body.add_items(1, '123', 'ok')
@@ -157,10 +160,10 @@ if __name__ == '__main__':
     print(my_rm_body)
 
     from royal_mail_rest_api.shipping import ShippingApi
-    CLIENT_ID = ''
-    CLIENT_SECRET = ''
-    USERNAME = ''
-    PASSWORD_HASHED = ''
+    CLIENT_ID = creds['royal_mail']['CLIENT_ID']
+    CLIENT_SECRET = creds['royal_mail']['CLIENT_SECRET']
+    USERNAME = creds['royal_mail']['USERNAME']
+    PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
     my_shipping = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
     my_shipping.get_token()
     post_shipping = my_shipping.post_domestic(my_rm_body)
