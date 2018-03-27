@@ -75,7 +75,6 @@ class ShippingApi(RoyalMailBaseClass):
         This method will take a domestic shipment request in the body and on successful response, it will return the shipment numbers and item details.
         :return:
         """
-        import json
         data = data
         result = requests.post('{}{}'.format(self.url,self.post_domestic_url), data=data, headers=self.tokenheader)
         result.raise_for_status()
