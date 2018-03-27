@@ -7,7 +7,6 @@ import pytest
 
 from click.testing import CliRunner
 
-from royal_mail_rest_api import royal_mail_rest_api
 from royal_mail_rest_api import cli
 
 
