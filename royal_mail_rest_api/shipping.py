@@ -1,7 +1,10 @@
-from .api import RoyalMailBaseClass
+import requests
+from royal_mail_rest_api.api import RoyalMailBaseClass
 
 
-class Shipping(RoyalMailBaseClass):
+class ShippingApi(RoyalMailBaseClass):
+    token_url = '/shipping/v2/token'
+
     def __init__(self, client_id, client_secret, username, password):
         """
         authenticate with the Shipping service.
@@ -13,6 +16,21 @@ class Shipping(RoyalMailBaseClass):
         :param username:
         :param password:
         """
+
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.username = username
+        self.password = password
+        self._create_headers()
+
+
+    def _create_headers(self):
+        self.header = {'X-IBM-Client-Id': self.client_id,
+                       'X-IBM-Client-Secret': self.client_secret,
+                       'x-rmg-user-name': self.username,
+                       'x-rmg-password': self.password,
+                       'accept': 'application/json'}
+
 
     def get_token(self):
         """
@@ -29,7 +47,13 @@ class Shipping(RoyalMailBaseClass):
 
         :return:
         """
-        pass
+
+
+        result = requests.get('{}/{}'.format(self.url, self.token_url), headers=self.header)
+        result.raise_for_status()
+        result = result.json()
+        self.token = result['token']
+
 
     def post_domestic(self):
         """
@@ -111,3 +135,13 @@ class Shipping(RoyalMailBaseClass):
         """
         pass
 
+
+
+if __name__ == '__main__':
+    CLIENT_ID = ''
+    CLIENT_SECRET = ''
+    USERNAME = ''
+    PASSWORD_HASHED = ''
+
+    shipping_api = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
+    token = shipping_api.get_token()
