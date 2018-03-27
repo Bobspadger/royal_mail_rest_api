@@ -4,6 +4,7 @@ from royal_mail_rest_api.api import RoyalMailBaseClass
 
 class ShippingApi(RoyalMailBaseClass):
     token_url = '/shipping/v2/token'
+    post_domestic_url = '/shipping/v2/domestic'
 
     def __init__(self, client_id, client_secret, username, password):
         """
@@ -21,16 +22,22 @@ class ShippingApi(RoyalMailBaseClass):
         self.client_secret = client_secret
         self.username = username
         self.password = password
-        self._create_headers()
+        self._create_authentication_header()
 
 
-    def _create_headers(self):
+    def _create_authentication_header(self):
         self.header = {'X-IBM-Client-Id': self.client_id,
                        'X-IBM-Client-Secret': self.client_secret,
                        'x-rmg-user-name': self.username,
                        'x-rmg-password': self.password,
-                       'accept': 'application/json'}
+                       'accept': 'application/json',
+                       'content-type': 'application/json'}
 
+    def _create_token_header(self):
+            self.tokenheader = {'X-IBM-Client-Id': self.client_id,
+                           'X-IBM-Client-Secret': self.client_secret,
+                           'x-rmg-auth-token': self.token,
+                           'accept': 'application/json'}
 
     def get_token(self):
         """
@@ -49,13 +56,13 @@ class ShippingApi(RoyalMailBaseClass):
         """
 
 
-        result = requests.get('{}/{}'.format(self.url, self.token_url), headers=self.header)
+        result = requests.get('{}{}'.format(self.url, self.token_url), headers=self.header)
         result.raise_for_status()
         result = result.json()
         self.token = result['token']
+        self._create_token_header()
 
-
-    def post_domestic(self):
+    def post_domestic(self, data):
         """
 
         Summary
@@ -68,8 +75,11 @@ class ShippingApi(RoyalMailBaseClass):
         This method will take a domestic shipment request in the body and on successful response, it will return the shipment numbers and item details.
         :return:
         """
-        pass
-
+        import json
+        data = data
+        result = requests.post('{}{}'.format(self.url,self.post_domestic_url), data=data, headers=self.tokenheader)
+        result.raise_for_status()
+        return result.json
 
     def put_shipment(self):
         """
