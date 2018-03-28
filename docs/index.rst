@@ -8,6 +8,7 @@ Welcome to Royal Mail Rest API's documentation!
    readme
    installation
    usage
+   example_shipping
    modules
    contributing
    authors
