@@ -5,6 +5,7 @@ from royal_mail_rest_api.api import RoyalMailBaseClass
 class ShippingApi(RoyalMailBaseClass):
     token_url = '/shipping/v2/token'
     post_domestic_url = '/shipping/v2/domestic'
+    delete_shipment_url = '/shipping/v2/'
 
     def __init__(self, client_id, client_secret, username, password):
         """
@@ -76,7 +77,7 @@ class ShippingApi(RoyalMailBaseClass):
         :return:
         """
         data = data
-        result = requests.post('{}{}'.format(self.url,self.post_domestic_url), data=data, headers=self.tokenheader)
+        result = requests.post('{}{}'.format(self.url,self.post_domestic_url), json=data, headers=self.tokenheader)
         result.raise_for_status()
         return result.json
 
@@ -98,7 +99,7 @@ class ShippingApi(RoyalMailBaseClass):
         pass
 
 
-    def delete_shipment(self):
+    def delete_shipment(self, shipment_number):
         """
 
         Description
@@ -107,7 +108,9 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        pass
+        result = requests.delete('{}{}{}'.format(self.url, self.delete_shipment_url, shipment_number), headers=self.tokenheader)
+        result.raise_for_status()
+        return result.json()
 
 
     def put_shipment_label(self):
