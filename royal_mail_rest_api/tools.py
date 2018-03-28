@@ -1,7 +1,7 @@
 import datetime
 
 class RoyalMailBody():
-    def __init__(self):
+    def __init__(self, shipment_type):
         self.items = [{
             "offlineShipment": [
                 {
@@ -21,7 +21,7 @@ class RoyalMailBody():
         self.address = None
         self.service = None
         self.shipping_date = None
-        self.shipment_type = None
+        self.shipment_type = self._check_ship_type(shipment_type)
         self.sender_reference = None
         self.department_reference = None
         self.customer_reference = None
@@ -61,11 +61,12 @@ class RoyalMailBody():
 
         return new_dict
 
-    def add_ship_type(self, shipment_type):
+    def _check_ship_type(self, shipment_type):
         if shipment_type != 'delivery':
             # TODO: Find out the other options here!
             raise Exception('Sorry, only delivery supported at the moment')
-        self.shipment_type = shipment_type
+        else:
+            self.shipment_type = shipment_type.lower()
 
 
     def add_ship_date(self, date_obj=None):
