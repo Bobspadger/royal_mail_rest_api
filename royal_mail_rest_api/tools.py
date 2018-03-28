@@ -220,3 +220,4 @@ if __name__ == '__main__':
     print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
     delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
     print(delete_shipping)
+
