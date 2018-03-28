@@ -166,4 +166,56 @@ if __name__ == '__main__':
     PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
     my_shipping = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
     my_shipping.get_token()
-    post_shipping = my_shipping.post_domestic(my_rm_body)
+
+    working_from_rm = {
+"shipmentType":"Delivery",
+"service":{
+    "format":"P",
+    "occurrence":"1",
+    "offering":"TPN",
+    "type":"T",
+    "signature":"true",
+    "enhancements":["14"
+
+                    ]
+},
+"shippingDate":"2018-03-28",
+"items":[
+    {
+        "count":1,
+        "weight":{
+            "unitOfMeasure":"g",
+            "value":100
+        }
+    }
+],
+"recipientContact":{
+    "name":"Joe Bloggs",
+    "complementaryName":None,
+
+    "email":"joe.bloggs@royalmail.com"
+},
+
+"recipientAddress":{
+    "buildingName":"Cable and Engineering Limited",
+    "buildingNumber":"1",
+    "addressLine1":"Broadgate Circle",
+    "addressLine2":"Address line 2",
+    "addressLine3":"Address Line 3",
+    "postTown":"London",
+    "country":"GB",
+    "postCode":"EC1A 1BB"
+},
+"senderReference":"Senders Ref",
+"departmentReference":"Dept Ref",
+"customerReference":"Do not use",
+"safePlace":None
+}
+
+    post_shipping = my_shipping.post_domestic(working_from_rm)
+
+    label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+
+    print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    print(delete_shipping)

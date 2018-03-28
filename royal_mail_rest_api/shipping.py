@@ -6,6 +6,7 @@ class ShippingApi(RoyalMailBaseClass):
     token_url = '/shipping/v2/token'
     post_domestic_url = '/shipping/v2/domestic'
     delete_shipment_url = '/shipping/v2/'
+    put_shipment_label_url = '/shipping/v2/'
 
     def __init__(self, client_id, client_secret, username, password):
         """
@@ -79,7 +80,7 @@ class ShippingApi(RoyalMailBaseClass):
         data = data
         result = requests.post('{}{}'.format(self.url,self.post_domestic_url), json=data, headers=self.tokenheader)
         result.raise_for_status()
-        return result.json
+        return result.json()
 
     def put_shipment(self):
         """
@@ -113,7 +114,7 @@ class ShippingApi(RoyalMailBaseClass):
         return result.json()
 
 
-    def put_shipment_label(self):
+    def put_shipment_label(self, shipment_number):
         """
 
         Description
@@ -122,7 +123,9 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        pass
+        result = requests.put('{}{}{}/label'.format(self.url, self.put_shipment_label_url,shipment_number), headers=self.tokenheader)
+        result.raise_for_status()
+        return result.json()
 
     def post_manifest(self):
         """
