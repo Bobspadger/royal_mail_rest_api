@@ -63,26 +63,4 @@ class TrackingApi(RoyalMailBaseClass):
         return result.json()
 
 
-if __name__ == '__main__':
-    CLIENT_ID = ''
-    CLIENT_SECRET = ''
-    TRACKING_NUMBER = ''
-    tracking_api = TrackingApi(CLIENT_ID, CLIENT_SECRET)
 
-    try:
-        test_tracking = tracking_api.summary(TRACKING_NUMBER)
-        print(test_tracking)
-    except Exception as e:
-        print(e)
-
-    try:
-        test_pod = tracking_api.proof_of_delivery(TRACKING_NUMBER)
-        print(test_pod)
-    except Exception as e:
-        print(e)
-
-    try:
-        history_tracking = tracking_api.history(TRACKING_NUMBER)
-        print(history_tracking)
-    except Exception as e:
-        print(e)
