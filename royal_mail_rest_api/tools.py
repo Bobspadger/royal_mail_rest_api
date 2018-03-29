@@ -1,6 +1,7 @@
 import datetime
 
-class RoyalMailBody():
+
+class RoyalMailBody:
     def __init__(self, shipment_type):
         self.receipient = None
         self.address = None
@@ -54,11 +55,12 @@ class RoyalMailBody():
 
         return domestic_body
 
-    def remove_none_values(self, iterable):
+    @staticmethod
+    def remove_none_values(iterable):
         """
         take out values of None by removing the key
         :param iterable:
-        :return:
+        :return: dictionary
         """
 
         new_dict = {k: v for k, v in iterable.items() if v is not None}
@@ -71,7 +73,6 @@ class RoyalMailBody():
             raise Exception('Sorry, only delivery supported at the moment')
         else:
             self.shipment_type = shipment_type.lower()
-
 
     def add_ship_date(self, date_obj=None):
         """
@@ -98,7 +99,6 @@ class RoyalMailBody():
 
         self.service = service
 
-
     def add_receipient_contact(self, name, email, complementary_name=None, telephone=None):
         receipient = {
             "name": name,
@@ -110,10 +110,9 @@ class RoyalMailBody():
         # receipient = self.remove_none_values(receipient)
         self.receipient = receipient
 
-
     def add_items(self, number, weight, unit_of_measure):
         items = [{
-            "count": number ,
+            "count": number,
             "weight": {
                 "unitOfMeasure": unit_of_measure,
                 "value": weight
@@ -122,9 +121,8 @@ class RoyalMailBody():
 
         self.items = items
 
-
-    def add_receipient_address(self, address_line1, post_town, county, postcode, country, building_name=None, building_number=None,
-                           address_line2=None, address_line3=None):
+    def add_receipient_address(self, address_line1, post_town, county, postcode, country, building_name=None,
+                               building_number=None, address_line2=None, address_line3=None):
         address = {
             "buildingName": building_name,
             "buildingNumber": building_number,
@@ -141,61 +139,3 @@ class RoyalMailBody():
         self.address = address
 
 
-
-
-if __name__ == '__main__':
-    from royal_mail_rest_api.get_credentials import return_credentials
-    creds = return_credentials()
-
-    body = RoyalMailBody('Delivery')
-
-
-    body.add_ship_date(None)
-    body.add_service('P', 1, 'TPN', 'T', True,  ['14'])
-    body.customer_reference = 'D123456'
-    body.department_reference = 'Q123456'
-    body.sender_reference = 'A123456'
-    body.add_items(1, 100, 'g')
-    body.add_receipient_contact('Joe Bloggs', 'joe.bloggs@royalmail.com', None, '07970810000')
-    body.add_receipient_address('Broadgate Circle', 'London', None, 'EC1A 1BB', country='GB', building_number='1', address_line2='Add line 2', address_line3='Add line 3', building_name='My building')
-
-
-    my_rm_body = body.return_domestic_body()
-    import json
-
-    print(json.dumps(my_rm_body))
-
-    print(my_rm_body)
-
-    from royal_mail_rest_api.shipping import ShippingApi
-    CLIENT_ID = creds['royal_mail']['CLIENT_ID']
-    CLIENT_SECRET = creds['royal_mail']['CLIENT_SECRET']
-    USERNAME = creds['royal_mail']['USERNAME']
-    PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
-    my_shipping = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
-    my_shipping.get_token()
-
-
-    post_shipping = my_shipping.post_domestic(my_rm_body)
-    tracking_ref= post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber']
-    label = my_shipping.put_shipment_label(tracking_ref)
-
-    # new_data = {
-    #     'recipientContact': {
-    #         'name': 'Alex Hellier'
-    #     }
-    # }
-
-    body.add_receipient_contact('Alex Hellier', 'alex@me.com', 'Alex S Hellier', '123455')
-    new_data = body.return_domestic_update_boy()
-    change_name = my_shipping.put_shipment(tracking_ref, new_data)
-    new_label = my_shipping.put_shipment_label(tracking_ref)
-
-    print(tracking_ref)
-    # delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
-    # print(delete_shipping)
-    # manifest_info = {'yourReference': '123'}
-    # manifest_data = my_shipping.post_manifest(manifest_info)
-    # print(manifest_data)
-    # manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
-    # print(manifest_label)
