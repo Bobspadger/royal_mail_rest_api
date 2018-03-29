@@ -6,7 +6,7 @@ Royal Mail Rest API
 .. image:: https://img.shields.io/pypi/v/royal_mail_rest_api.svg
         :target: https://pypi.python.org/pypi/royal_mail_rest_api
 
-.. image:: https://img.shields.io/travis/bobspadger/royal_mail_rest_api.svg
+.. image:: https://api.travis-ci.org/Bobspadger/royal_mail_rest_api.svg
         :target: https://travis-ci.org/Bobspadger/royal_mail_rest_api
 
 .. image:: https://readthedocs.org/projects/royal-mail-rest-api/badge/?version=latest
