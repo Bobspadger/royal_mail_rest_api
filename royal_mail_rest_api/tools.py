@@ -2,31 +2,17 @@ import datetime
 
 class RoyalMailBody():
     def __init__(self, shipment_type):
-        self.items = [{
-            "offlineShipment": [
-                {
-                    "number": "1",
-                    "itemID": "221228314918912",
-                    "status": "new"
-                }
-            ],
-            "count": 1,
-            "weight": {
-                "unitOfMeasure": "g",
-                "value": 100
-            }
-        }
-    ]
         self.receipient = None
         self.address = None
         self.service = None
         self.shipping_date = None
-        self.shipment_type = self._check_ship_type(shipment_type)
+        self.shipment_type = shipment_type
         self.sender_reference = None
         self.department_reference = None
         self.customer_reference = None
+        self.items = []
         self.item_count = len(self.items)
-
+        self.safe_place = None
 
     def return_domestic_body(self):
         """
@@ -39,11 +25,12 @@ class RoyalMailBody():
             'service': self.service,
             'shippingDate': self.shipping_date,
             'items': self.items,
-            'receipientContact': self.receipient,
-            'receipientAddress': self.address,
+            'recipientContact': self.receipient,
+            'recipientAddress': self.address,
             'senderReference': self.sender_reference,
             'departmentReference': self.department_reference,
             'customerReference': self.customer_reference,
+            'safePlace': self.safe_place
         }
 
         return domestic_body
@@ -103,21 +90,23 @@ class RoyalMailBody():
             "email": email
         }
 
-        receipient = self.remove_none_values(receipient)
+        # receipient = self.remove_none_values(receipient)
         self.receipient = receipient
 
 
-    def add_items(self, number, item_id, status):
-        item = {
-            "number": number ,
-            "itemID": item_id,
-            "status": status
-        }
+    def add_items(self, number, weight, unit_of_measure):
+        items = [{
+            "count": number ,
+            "weight": {
+                "unitOfMeasure": unit_of_measure,
+                "value": weight
+            },
+        }]
 
-        self.items.append(item)
+        self.items = items
 
 
-    def add_receipient_address(self, address_line1, post_town, county, postcode, building_name=None, building_number=None,
+    def add_receipient_address(self, address_line1, post_town, county, postcode, country, building_name=None, building_number=None,
                            address_line2=None, address_line3=None):
         address = {
             "buildingName": building_name,
@@ -127,10 +116,11 @@ class RoyalMailBody():
             "addressLine3": address_line3,
             "postTown": post_town,
             "county": county,
-            "postCode": postcode
+            "postCode": postcode,
+            "country": country
         }
 
-        address = self.remove_none_values(address)
+        # address = self.remove_none_values(address)
         self.address = address
 
 
@@ -140,17 +130,17 @@ if __name__ == '__main__':
     from royal_mail_rest_api.get_credentials import return_credentials
     creds = return_credentials()
 
-    body = RoyalMailBody()
-    body.add_ship_type('delivery')
-    # body.add_items(1, '123', 'ok')
-    # body.add_items(2, '134', 'ok')
+    body = RoyalMailBody('Delivery')
+
+
     body.add_ship_date(None)
-    body.add_service('P', None, 'TPN', 'T', None,  ['12', '13', '14'])
+    body.add_service('P', 1, 'TPN', 'T', True,  ['14'])
     body.customer_reference = 'D123456'
     body.department_reference = 'Q123456'
     body.sender_reference = 'A123456'
-    body.add_receipient_contact('Alex Hellier', 'alex@absolutemusic.co.uk', None, '07970810000')
-    body.add_receipient_address('855 Ringwood Road', 'Bournemouth', 'Dorset', 'BH10 6JJ', building_number='5')
+    body.add_items(1, 100, 'g')
+    body.add_receipient_contact('Joe Bloggs', 'joe.bloggs@royalmail.com', None, '07970810000')
+    body.add_receipient_address('Broadgate Circle', 'London', None, 'EC1A 1BB', country='GB', building_number='1', address_line2='Add line 2', address_line3='Add line 3', building_name='My building')
 
 
     my_rm_body = body.return_domestic_body()
@@ -175,7 +165,7 @@ if __name__ == '__main__':
     "occurrence":"1",
     "offering":"TPN",
     "type":"T",
-    "signature":"true",
+    "signature":True,
     "enhancements":["14"
 
                     ]
@@ -212,9 +202,8 @@ if __name__ == '__main__':
 "customerReference":"Do not use",
 "safePlace":None
 }
-
-    post_shipping = my_shipping.post_domestic(working_from_rm)
-
+    json_payload = json.dumps(my_rm_body)
+    post_shipping = my_shipping.post_domestic(my_rm_body)
     label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
 
     print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
