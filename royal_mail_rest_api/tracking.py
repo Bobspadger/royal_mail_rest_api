@@ -1,6 +1,7 @@
 import requests
 from royal_mail_rest_api.api import RoyalMailBaseClass
 
+
 class TrackingApi(RoyalMailBaseClass):
     """
     Start class for royal mail shipping api
@@ -88,4 +89,3 @@ if __name__ == '__main__':
         print(history_tracking)
     except Exception as e:
         print(e)
-
