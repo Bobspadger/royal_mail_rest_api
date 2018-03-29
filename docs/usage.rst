@@ -8,6 +8,7 @@ To use Royal Mail Rest API in a project:
     (this is from the example.py file which will be updated, its worth looking there)
 
 .. code-block:: python
+
     import json
     from royal_mail_rest_api.tools import RoyalMailBody
     from royal_mail_rest_api.shipping import ShippingApi

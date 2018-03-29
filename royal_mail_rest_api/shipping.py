@@ -3,6 +3,9 @@ from royal_mail_rest_api.api import RoyalMailBaseClass
 
 
 class ShippingApi(RoyalMailBaseClass):
+    """
+    Royal Mail Shipping Class, used to communicate with the Royal Mail Rest API to create labels
+    """
     token_url = '/shipping/v2/token'
     post_domestic_url = '/shipping/v2/domestic'
     delete_shipment_url = '/shipping/v2/'
@@ -167,6 +170,3 @@ class ShippingApi(RoyalMailBaseClass):
                               headers=self.tokenheader)
         result.raise_for_status()
         return result.json()
-
-
-
