@@ -6,7 +6,7 @@ class RoyalMailBody():
         self.address = None
         self.service = None
         self.shipping_date = None
-        self.shipment_type = self._check_ship_type(shipment_type)
+        self._check_ship_type(shipment_type)
         self.sender_reference = None
         self.department_reference = None
         self.customer_reference = None
@@ -159,22 +159,24 @@ if __name__ == '__main__':
     my_shipping.get_token()
 
 
-    # json_payload = json.dumps(my_rm_body)
     post_shipping = my_shipping.post_domestic(my_rm_body)
-    label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
-    #
-    # my_rm_body['recipientContact']['name'] = 'Bloggs Joe'
+    tracking_ref= post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber']
+    label = my_shipping.put_shipment_label(tracking_ref)
 
+    new_data = {
+        'recipientContact': {
+            'name': 'Alex Hellier'
+        }
+    }
 
-    # change_name = my_shipping.put_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'], my_rm_body)
-    #
-    # new_label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    change_name = my_shipping.put_shipment(tracking_ref, new_data)
+    new_label = my_shipping.put_shipment_label(tracking_ref)
 
-    # print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    print(tracking_ref)
     # delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
     # print(delete_shipping)
     # manifest_info = {'yourReference': '123'}
     # manifest_data = my_shipping.post_manifest(manifest_info)
     # print(manifest_data)
-    manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
-    print(manifest_label)
+    # manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
+    # print(manifest_label)
