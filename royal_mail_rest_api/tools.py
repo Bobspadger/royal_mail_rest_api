@@ -35,7 +35,24 @@ class RoyalMailBody():
 
         return domestic_body
 
+    def return_domestic_update_boy(self):
+        """
+        build domestic body from items
+        :return:
+        """
 
+        domestic_body = {
+            'service': self.service,
+            'shippingDate': self.shipping_date,
+            'recipientContact': self.receipient,
+            'recipientAddress': self.address,
+            'senderReference': self.sender_reference,
+            'departmentReference': self.department_reference,
+            'customerReference': self.customer_reference,
+            'safePlace': self.safe_place
+        }
+
+        return domestic_body
 
     def remove_none_values(self, iterable):
         """
@@ -163,12 +180,14 @@ if __name__ == '__main__':
     tracking_ref= post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber']
     label = my_shipping.put_shipment_label(tracking_ref)
 
-    new_data = {
-        'recipientContact': {
-            'name': 'Alex Hellier'
-        }
-    }
+    # new_data = {
+    #     'recipientContact': {
+    #         'name': 'Alex Hellier'
+    #     }
+    # }
 
+    body.add_receipient_contact('Alex Hellier', 'alex@me.com', 'Alex S Hellier', '123455')
+    new_data = body.return_domestic_update_boy()
     change_name = my_shipping.put_shipment(tracking_ref, new_data)
     new_label = my_shipping.put_shipment_label(tracking_ref)
 
