@@ -169,14 +169,4 @@ class ShippingApi(RoyalMailBaseClass):
         return result.json()
 
 
-if __name__ == '__main__':
-    from royal_mail_rest_api.get_credentials import return_credentials
-    creds = return_credentials()
 
-    CLIENT_ID = creds['royal_mail']['CLIENT_ID']
-    CLIENT_SECRET = creds['royal_mail']['CLIENT_SECRET']
-    USERNAME = creds['royal_mail']['USERNAME']
-    PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
-
-    shipping_api = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
-    token = shipping_api.get_token()
