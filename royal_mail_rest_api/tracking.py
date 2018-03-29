@@ -63,29 +63,4 @@ class TrackingApi(RoyalMailBaseClass):
         return result.json()
 
 
-if __name__ == '__main__':
-    from royal_mail_rest_api.get_credentials import return_credentials
-    creds = return_credentials()
-    CLIENT_ID = creds['royal_mail']['CLIENT_ID']
-    CLIENT_SECRET = creds['royal_mail']['CLIENT_SECRET']
-    USERNAME = creds['royal_mail']['USERNAME']
-    PASSWORD_HASHED = creds['royal_mail']['PASSWORD_HASHED']
-    tracking_api = TrackingApi(CLIENT_ID, CLIENT_SECRET)
-    TRACKING_NUMBER = '13digit royal mail tracking id'
-    try:
-        test_tracking = tracking_api.summary(TRACKING_NUMBER)
-        print(test_tracking)
-    except Exception as e:
-        print(e)
 
-    try:
-        test_pod = tracking_api.proof_of_delivery(TRACKING_NUMBER)
-        print(test_pod)
-    except Exception as e:
-        print(e)
-
-    try:
-        history_tracking = tracking_api.history(TRACKING_NUMBER)
-        print(history_tracking)
-    except Exception as e:
-        print(e)
