@@ -6,7 +6,7 @@ class RoyalMailBody():
         self.address = None
         self.service = None
         self.shipping_date = None
-        self.shipment_type = shipment_type
+        self.shipment_type = self._check_ship_type(shipment_type)
         self.sender_reference = None
         self.department_reference = None
         self.customer_reference = None
@@ -49,7 +49,7 @@ class RoyalMailBody():
         return new_dict
 
     def _check_ship_type(self, shipment_type):
-        if shipment_type != 'delivery':
+        if shipment_type.lower() != 'delivery':
             # TODO: Find out the other options here!
             raise Exception('Sorry, only delivery supported at the moment')
         else:
@@ -158,55 +158,23 @@ if __name__ == '__main__':
     my_shipping = ShippingApi(CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD_HASHED)
     my_shipping.get_token()
 
-    working_from_rm = {
-"shipmentType":"Delivery",
-"service":{
-    "format":"P",
-    "occurrence":"1",
-    "offering":"TPN",
-    "type":"T",
-    "signature":True,
-    "enhancements":["14"
 
-                    ]
-},
-"shippingDate":"2018-03-28",
-"items":[
-    {
-        "count":1,
-        "weight":{
-            "unitOfMeasure":"g",
-            "value":100
-        }
-    }
-],
-"recipientContact":{
-    "name":"Joe Bloggs",
-    "complementaryName":None,
-
-    "email":"joe.bloggs@royalmail.com"
-},
-
-"recipientAddress":{
-    "buildingName":"Cable and Engineering Limited",
-    "buildingNumber":"1",
-    "addressLine1":"Broadgate Circle",
-    "addressLine2":"Address line 2",
-    "addressLine3":"Address Line 3",
-    "postTown":"London",
-    "country":"GB",
-    "postCode":"EC1A 1BB"
-},
-"senderReference":"Senders Ref",
-"departmentReference":"Dept Ref",
-"customerReference":"Do not use",
-"safePlace":None
-}
-    json_payload = json.dumps(my_rm_body)
+    # json_payload = json.dumps(my_rm_body)
     post_shipping = my_shipping.post_domestic(my_rm_body)
     label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    #
+    # my_rm_body['recipientContact']['name'] = 'Bloggs Joe'
 
-    print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
-    delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
-    print(delete_shipping)
 
+    # change_name = my_shipping.put_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'], my_rm_body)
+    #
+    # new_label = my_shipping.put_shipment_label(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+
+    # print(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    # delete_shipping = my_shipping.delete_shipment(post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber'])
+    # print(delete_shipping)
+    # manifest_info = {'yourReference': '123'}
+    # manifest_data = my_shipping.post_manifest(manifest_info)
+    # print(manifest_data)
+    manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
+    print(manifest_label)

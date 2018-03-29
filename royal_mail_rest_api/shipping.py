@@ -125,11 +125,11 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        result = requests.put('{}{}{}/label'.format(self.url, self.put_shipment_label_url,shipment_number), headers=self.tokenheader)
+        result = requests.put('{}{}{}/label'.format(self.url, self.put_shipment_label_url, shipment_number), headers=self.tokenheader)
         result.raise_for_status()
         return result.json()
 
-    def post_manifest(self):
+    def post_manifest(self, manifest_options=None):
         """
 
         Description
@@ -138,11 +138,11 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        result = requests.post('{}{}'.format(self.url, self.post_manifest_url), headers=self.tokenheader)
+        result = requests.post('{}{}'.format(self.url, self.post_manifest_url), json=manifest_options, headers=self.tokenheader)
         result.raise_for_status()
         return result.json()
 
-    def put_manifest(self):
+    def put_manifest(self, sales_order_number=None, manifest_batch_number=None):
         """
 
         Description
@@ -152,8 +152,14 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        pass
+        items = {'salesOrderNumber': sales_order_number, 'manifestBatchNumber': manifest_batch_number}
+        params = ['{}={}'.format(k, str(v)) for k, v in items.items() if v is not None]
 
+        query_params = '&'.join(params)
+
+        result = requests.put('{}{}?{}'.format(self.url, self.post_manifest_url, query_params), headers=self.tokenheader)
+        result.raise_for_status()
+        return result.json()
 
 
 if __name__ == '__main__':
