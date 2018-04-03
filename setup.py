@@ -48,6 +48,7 @@ setup(
     project_urls={'Source': 'https://github.com/bobspadger/royal_mail_rest_api',
                   'Documentation': 'http://royal-mail-rest-api.readthedocs.io/en/latest/index.html'},
     download_url='https://github.com/Bobspadger/royal_mail_rest_api',
-    version='0.0.1',
+    url='http://royal-mail-rest-api.readthedocs.io/en/latest/index.html',
+    version='0.0.2',
     zip_safe=False,
 )
