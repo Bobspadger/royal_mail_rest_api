@@ -1,4 +1,4 @@
-import json
+import datetime
 from royal_mail_rest_api.tools import RoyalMailBody
 from royal_mail_rest_api.shipping import ShippingApi
 from royal_mail_rest_api.tracking import TrackingApi
@@ -59,9 +59,19 @@ if __name__ == '__main__':
 
     # If we have some labels to manifest - request it
     manifest_info = {'yourReference': '123'}
-    manifest_data = my_shipping.post_manifest(manifest_info)
+    try:
+        manifest_data = my_shipping.post_manifest(manifest_info)
     # Get the manifest doumentation - note, you will need the maniefest number to get this
-    manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
+        manifest_label = my_shipping.put_manifest(manifest_batch_number=5)
+    except Exception as e:
+        # this will probably fail unless you change some details
+        print(e)
+    # Test we don't need a new token:
+
+    my_shipping.get_token()
+    # now change the self.token_created to be 5 hours ago
+    my_shipping.token_created = datetime.datetime.now() - datetime.timedelta(hours=5)
+    my_shipping.get_token()
 
 
     # Now, a period of time has passed, we can track those packages
