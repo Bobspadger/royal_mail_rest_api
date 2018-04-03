@@ -37,9 +37,10 @@ It is VERY MUCH a work in progress, so help is hugely appreciated, and be carefu
 Features
 --------
 
-* Better error handling
-* Country code verification
-* Postcode regex
+Create Labels
+Update Labels
+Create Manifests
+Post Manifests
 
 
 Credits

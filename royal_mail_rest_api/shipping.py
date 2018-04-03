@@ -1,5 +1,7 @@
 import requests
+import datetime
 from royal_mail_rest_api.api import RoyalMailBaseClass
+
 
 
 class ShippingApi(RoyalMailBaseClass):
@@ -29,6 +31,9 @@ class ShippingApi(RoyalMailBaseClass):
         self.client_secret = client_secret
         self.username = username
         self.password = password
+
+        # make a date 30 days in the past so the token is expired.
+        self.token_created = datetime.datetime.now() - datetime.timedelta(days=30)
         self._create_authentication_header()
 
     def _create_authentication_header(self):
@@ -62,12 +67,15 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
+        # Token expires after 4 hours, lets give it 3.45 hours to be safe
+        if self.token_created < (datetime.datetime.now() - datetime.timedelta(hours=3, minutes=45)):
+            result = requests.get('{}{}'.format(self.url, self.token_url), headers=self.header)
+            result.raise_for_status()
+            result = result.json()
+            self.token = result['token']
+            self.token_created = datetime.datetime.now()
+            self._create_token_header()
 
-        result = requests.get('{}{}'.format(self.url, self.token_url), headers=self.header)
-        result.raise_for_status()
-        result = result.json()
-        self.token = result['token']
-        self._create_token_header()
 
     def post_domestic(self, data):
         """
@@ -83,6 +91,7 @@ class ShippingApi(RoyalMailBaseClass):
         it will return the shipment numbers and item details.
         :return:
         """
+        self.get_token()
         data = data
         result = requests.post('{}{}'.format(self.url, self.post_domestic_url), json=data, headers=self.tokenheader)
         result.raise_for_status()
@@ -104,7 +113,7 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
-        # TODO: returning 400 errors at present
+        self.get_token()
         result = requests.put('{}{}{}'.format(self.url, self.put_shipment_update_url, shipment_number), json=data,
                               headers=self.tokenheader)
         result.raise_for_status()
@@ -118,6 +127,7 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
+        self.get_token()
         result = requests.delete('{}{}{}'.format(self.url, self.delete_shipment_url, shipment_number),
                                  headers=self.tokenheader)
         result.raise_for_status()
@@ -132,6 +142,7 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
+        self.get_token()
         result = requests.put('{}{}{}/label'.format(self.url, self.put_shipment_label_url, shipment_number),
                               headers=self.tokenheader)
         result.raise_for_status()
@@ -146,6 +157,7 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
+        self.get_token()
         result = requests.post('{}{}'.format(self.url, self.post_manifest_url), json=manifest_options,
                                headers=self.tokenheader)
         result.raise_for_status()
@@ -161,6 +173,7 @@ class ShippingApi(RoyalMailBaseClass):
 
         :return:
         """
+        self.get_token()
         items = {'salesOrderNumber': sales_order_number, 'manifestBatchNumber': manifest_batch_number}
         params = ['{}={}'.format(k, str(v)) for k, v in items.items() if v is not None]
 
