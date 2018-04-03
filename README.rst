@@ -37,7 +37,10 @@ It is VERY MUCH a work in progress, so help is hugely appreciated, and be carefu
 Features
 --------
 
-* TODO
+* Better error handling
+* Country code verification
+* Postcode regex
+
 
 Credits
 -------
