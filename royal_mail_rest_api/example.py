@@ -19,7 +19,12 @@ if __name__ == '__main__':
 
     # Add our items to it
     body.add_ship_date(None)
-    body.add_service('P', 1, 'TPN', 'T', True,  ['14'])
+    body.add_service_type('royal_mail_tracked')
+    body.add_service_format('inland_large_letter')
+    body.add_service_offering('royal_mail_tracked_24')
+    body.add_service_enhancements('e-mail_notification')
+    body.add_service_occurence()
+    body.add_signature()
     body.customer_reference = 'D123456'
     body.department_reference = 'Q123456'
     body.sender_reference = 'A123456'
@@ -37,8 +42,10 @@ if __name__ == '__main__':
     # Request an authentication token
     my_shipping.get_token()
     # Post a shipping request
-    post_shipping = my_shipping.post_domestic(my_rm_body)
-
+    try:
+        post_shipping = my_shipping.post_domestic(my_rm_body)
+    except Exception as e:
+        print(e)
     # Store our tracking id for use.
     tracking_ref = post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber']
 
