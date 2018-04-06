@@ -249,25 +249,25 @@ class RoyalMailBody:
 
     def add_service_format(self, format=None):
         if format is None:
-            raise(KeyError('No service format selected'))
+            raise(ValueError('No service format selected'))
         if format not in self.service_formats:
-            raise(ValueError('Invalid service format'))
+            raise(KeyError('Invalid service format'))
         self.service_format = self.service_formats[format]
 
 
     def add_service_type(self, service_type):
         if service_type is None:
-            raise(KeyError('No service type selected'))
+            raise(Valueerror('no service type selected'))
         if service_type not in self.service_types:
-            raise(ValueError('Invalid service type'))
+            raise(KeyError('Invalid service type'))
         self.service_type = self.service_types[service_type]
 
 
     def add_service_offering(self, service_offering):
         if service_offering is None:
-            raise(KeyError('No service type selected'))
+            raise(ValueError('No service type selected'))
         if service_offering not in self.service_offerings:
-            raise(ValueError('Invalid service type'))
+            raise(KeyError('Invalid service type'))
         self.service_offering = self.service_offerings[service_offering]
 
 
@@ -280,14 +280,14 @@ class RoyalMailBody:
         if isinstance(signature, bool):
             self.signature = signature
         else:
-            raise(ValueError('Must be a boolean, True or False'))
+            raise(TypeError('Must be a boolean, True or False'))
 
 
     def add_service_enhancements(self, enhancement):
         if enhancement is None:
-            raise(KeyError('No Enhancement Selected'))
+            raise(ValueError('No Enhancement Selected'))
         if enhancement not in self.service_enhancements:
-            raise(ValueError('Not in service_enhancements'))
+            raise(KeyError('Not in service_enhancements'))
         self.enhancements.append(self.service_enhancements[enhancement])
 
 
