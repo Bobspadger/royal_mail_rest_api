@@ -255,15 +255,15 @@ class RoyalMailBody:
         self.service_format = self.service_formats[format]
 
 
-    def add_service_type(self, service_type):
+    def add_service_type(self, service_type=None):
         if service_type is None:
-            raise(Valueerror('no service type selected'))
+            raise(ValueError('no service type selected'))
         if service_type not in self.service_types:
             raise(KeyError('Invalid service type'))
         self.service_type = self.service_types[service_type]
 
 
-    def add_service_offering(self, service_offering):
+    def add_service_offering(self, service_offering=None):
         if service_offering is None:
             raise(ValueError('No service type selected'))
         if service_offering not in self.service_offerings:
