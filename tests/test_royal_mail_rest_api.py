@@ -6,6 +6,7 @@ import pytest
 import datetime
 from royal_mail_rest_api.tools import RoyalMailBody
 
+
 def test_add_services():
     body = RoyalMailBody('delivery')
     with pytest.raises(ValueError):
@@ -42,3 +43,4 @@ def test_add_ship_date():
     # Test we get date out in format YYYY-mm-dd
     body.add_ship_date(datetime.datetime.today())
     assert body.shipping_date == datetime.datetime.strftime(datetime.datetime.today(), '%Y-%m-%d')
+
