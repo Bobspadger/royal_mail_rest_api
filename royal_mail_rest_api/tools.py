@@ -274,11 +274,13 @@ class RoyalMailBody:
 
 
     def add_service_type(self, service_type=None):
+
         """
         add a valid service type using our friendly names
         :param service_type:
         :return:
         """
+
         if service_type is None:
             raise(ValueError('no service type selected'))
 
@@ -294,6 +296,7 @@ class RoyalMailBody:
         :param service_offering:
         :return:
         """
+
         if service_offering is None:
             raise(ValueError('No service type selected'))
         if service_offering not in self.service_offerings:
