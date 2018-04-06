@@ -4,3 +4,6 @@ class NotAuthorised(Exception):
 
 class GeneralError(Exception):
     pass
+
+class RoyalMailError(Exception):
+    pass
