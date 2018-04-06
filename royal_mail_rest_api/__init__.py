@@ -4,7 +4,7 @@
 
 __author__ = """Alex Hellier"""
 __email__ = 'alex.hellier@gmail.com'
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 
 # from .api import RoyalMailBaseClass
