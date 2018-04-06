@@ -1,7 +1,7 @@
 import requests
 import datetime
 from royal_mail_rest_api.api import RoyalMailBaseClass
-
+from royal_mail_rest_api.errors import RoyalMailError
 
 
 class ShippingApi(RoyalMailBaseClass):
@@ -76,6 +76,17 @@ class ShippingApi(RoyalMailBaseClass):
             self.token_created = datetime.datetime.now()
             self._create_token_header()
 
+    def _error_handler(self, result):
+        """
+        Deal with returning a useful error up the chain, not just an http response error for the client app to deal with.
+        :param result:
+        :return:
+        """
+        try:
+            result.raise_for_status()
+        except Exception:
+            raise RoyalMailError(result.json())
+
 
     def post_domestic(self, data):
         """
@@ -94,7 +105,7 @@ class ShippingApi(RoyalMailBaseClass):
         self.get_token()
         data = data
         result = requests.post('{}{}'.format(self.url, self.post_domestic_url), json=data, headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()
 
     def put_shipment(self, shipment_number, data):
@@ -116,7 +127,7 @@ class ShippingApi(RoyalMailBaseClass):
         self.get_token()
         result = requests.put('{}{}{}'.format(self.url, self.put_shipment_update_url, shipment_number), json=data,
                               headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()
 
     def delete_shipment(self, shipment_number):
@@ -130,7 +141,7 @@ class ShippingApi(RoyalMailBaseClass):
         self.get_token()
         result = requests.delete('{}{}{}'.format(self.url, self.delete_shipment_url, shipment_number),
                                  headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()
 
     def put_shipment_label(self, shipment_number):
@@ -145,7 +156,7 @@ class ShippingApi(RoyalMailBaseClass):
         self.get_token()
         result = requests.put('{}{}{}/label'.format(self.url, self.put_shipment_label_url, shipment_number),
                               headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()
 
     def post_manifest(self, manifest_options=None):
@@ -160,7 +171,7 @@ class ShippingApi(RoyalMailBaseClass):
         self.get_token()
         result = requests.post('{}{}'.format(self.url, self.post_manifest_url), json=manifest_options,
                                headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()
 
     def put_manifest(self, sales_order_number=None, manifest_batch_number=None):
@@ -181,5 +192,5 @@ class ShippingApi(RoyalMailBaseClass):
 
         result = requests.put('{}{}?{}'.format(self.url, self.post_manifest_url, query_params),
                               headers=self.tokenheader)
-        result.raise_for_status()
+        self._error_handler(result)
         return result.json()

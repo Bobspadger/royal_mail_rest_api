@@ -22,7 +22,7 @@ if __name__ == '__main__':
     body.add_service_type('royal_mail_tracked')
     body.add_service_format('inland_large_letter')
     body.add_service_offering('royal_mail_tracked_24')
-    body.add_service_enhancements('e-mail_notification')
+    body.add_service_enhancements('sms_and_e-mail_notification')
     body.add_service_occurence()
     body.add_signature()
     body.customer_reference = 'D123456'
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     body.sender_reference = 'A123456'
     body.add_items(1, 100, 'g')
     body.add_receipient_contact('Joe Bloggs', 'joe.bloggs@royalmail.com', None, '07970810000')
-    body.add_receipient_address('Broadgate Circle', 'London', None, 'EC1A 1BB', country='GB', building_number='1',
+    body.add_receipient_address('Broadgate Circle', 'London', None, 'BH10 6JJ', country='GB', building_number='1',
                                 address_line2='Add line 2', address_line3='Add line 3', building_name='My building')
 
     # Request our body to use to request a label from royal mail
