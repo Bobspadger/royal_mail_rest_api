@@ -220,7 +220,7 @@ class RoyalMailBody:
     def _check_ship_type(self, shipment_type):
         if shipment_type.lower() != 'delivery':
             # TODO: Find out the other options here!
-            raise Exception('Sorry, only delivery supported at the moment')
+            raise ValueError('Sorry, only delivery supported at the moment')
         else:
             self.shipment_type = shipment_type.lower()
 
@@ -230,9 +230,13 @@ class RoyalMailBody:
         :param date_obj:
         :return:
         """
+
         if date_obj is None:
             date_obj = datetime.datetime.today()
-        self.shipping_date = datetime.datetime.strftime(date_obj, '%Y-%m-%d')
+        if isinstance(date_obj, datetime.datetime):
+            self.shipping_date = datetime.datetime.strftime(date_obj, '%Y-%m-%d')
+        else:
+            raise(TypeError('Sorry, need a datetime object'))
 
     def _add_service(self):
 
