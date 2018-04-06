@@ -165,6 +165,7 @@ class RoyalMailBody:
         self.item_count = len(self.items)
         self.safe_place = None
         self.enhancements = []
+
     def return_domestic_body(self):
         """
         build domestic body from items
@@ -218,6 +219,11 @@ class RoyalMailBody:
         return new_dict
 
     def _check_ship_type(self, shipment_type):
+        """
+        Check that the shipment type is valid (currently only delivery)
+        :param shipment_type:
+        :return:
+        """
         if shipment_type.lower() != 'delivery':
             # TODO: Find out the other options here!
             raise ValueError('Sorry, only delivery supported at the moment')
@@ -239,7 +245,10 @@ class RoyalMailBody:
             raise(TypeError('Sorry, need a datetime object'))
 
     def _add_service(self):
-
+        """
+        create our service block from already added inputs
+        :return:
+        """
         service = {
             "format": self.service_format,
             "occurrence": self.service_occurence,
@@ -252,6 +261,11 @@ class RoyalMailBody:
         return service
 
     def add_service_format(self, format=None):
+        """
+        add a valid service format using our friendly names
+        :param format:
+        :return:
+        """
         if format is None:
             raise(ValueError('No service format selected'))
         if format not in self.service_formats:
@@ -260,6 +274,11 @@ class RoyalMailBody:
 
 
     def add_service_type(self, service_type=None):
+        """
+        add a valid service type using our friendly names
+        :param service_type:
+        :return:
+        """
         if service_type is None:
             raise(ValueError('no service type selected'))
 
@@ -270,6 +289,11 @@ class RoyalMailBody:
 
 
     def add_service_offering(self, service_offering=None):
+        """
+        add a valid service offering using our friendly names
+        :param service_offering:
+        :return:
+        """
         if service_offering is None:
             raise(ValueError('No service type selected'))
         if service_offering not in self.service_offerings:
@@ -283,6 +307,11 @@ class RoyalMailBody:
 
 
     def add_signature(self, signature=False):
+        """
+        Do we want a signature on delivery
+        :param signature:
+        :return:
+        """
         if isinstance(signature, bool):
             self.signature = signature
         else:
@@ -290,6 +319,11 @@ class RoyalMailBody:
 
 
     def add_service_enhancements(self, enhancement):
+        """
+        add a single service enhancement, can be called multiple times to append required items
+        :param enhancement:
+        :return:
+        """
         if enhancement is None:
             raise(ValueError('No Enhancement Selected'))
         if enhancement not in self.service_enhancements:
@@ -298,6 +332,14 @@ class RoyalMailBody:
 
 
     def add_receipient_contact(self, name, email, complementary_name=None, telephone=None):
+        """
+        Add the name and contact of who this is being sent to
+        :param name:
+        :param email:
+        :param complementary_name:
+        :param telephone:
+        :return:
+        """
         receipient = {
             "name": name,
             "complementaryName": complementary_name,
@@ -309,6 +351,13 @@ class RoyalMailBody:
         self.receipient = receipient
 
     def add_items(self, number, weight, unit_of_measure):
+        """
+        Add items- currently only a single item
+        :param number:
+        :param weight:
+        :param unit_of_measure:
+        :return:
+        """
         items = [{
             "count": number,
             "weight": {
@@ -321,6 +370,19 @@ class RoyalMailBody:
 
     def add_receipient_address(self, address_line1, post_town, county, postcode, country, building_name=None,
                                building_number=None, address_line2=None, address_line3=None):
+        """
+        Add address of receipient
+        :param address_line1:
+        :param post_town:
+        :param county:
+        :param postcode:
+        :param country:
+        :param building_name:
+        :param building_number:
+        :param address_line2:
+        :param address_line3:
+        :return:
+        """
         address = {
             "buildingName": building_name,
             "buildingNumber": building_number,
