@@ -1,13 +1,7 @@
-Modules
-=======
+royal_mail_rest_api
+===================
 
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: royal_mail_rest_api.api
-    :members:
-
-.. automodule:: royal_mail_rest_api.tracking
-    :members:
-
-.. automodule:: royal_mail_rest_api.shipping
-    :members:
-
+   royal_mail_rest_api
