@@ -2,6 +2,7 @@ import datetime
 from royal_mail_rest_api.tools import RoyalMailBody
 from royal_mail_rest_api.shipping import ShippingApi
 from royal_mail_rest_api.tracking import TrackingApi
+from royal_mail_rest_api.errors import RoyalMailError
 from royal_mail_rest_api.get_credentials import return_credentials
 
 if __name__ == '__main__':
@@ -22,7 +23,7 @@ if __name__ == '__main__':
     body.add_service_type('royal_mail_tracked')
     body.add_service_format('inland_large_letter')
     body.add_service_offering('royal_mail_tracked_24')
-    body.add_service_enhancements('sms_and_e-mail_notification')
+    body.add_service_enhancements('e-mail_notification')
     body.add_service_occurence()
     body.add_signature()
     body.customer_reference = 'D123456'
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     # Post a shipping request
     try:
         post_shipping = my_shipping.post_domestic(my_rm_body)
-    except Exception as e:
+    except RoyalMailError as e:
         print(e)
     # Store our tracking id for use.
     tracking_ref = post_shipping['completedShipments'][0]['shipmentItems'][0]['shipmentNumber']
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     # Now lets change some info about the receipient
     body.add_receipient_contact('Alex Hellier', 'alex@me.com', 'Alex S Hellier', '123455')
     # And get our update body - this is slightly different from the original request
-    new_data = body.return_domestic_update_boy()
+    new_data = body.return_domestic_update_body()
     # Request a change
     change_name = my_shipping.put_shipment(tracking_ref, new_data)
     # Request a new label

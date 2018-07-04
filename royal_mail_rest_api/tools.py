@@ -187,7 +187,7 @@ class RoyalMailBody:
 
         return domestic_body
 
-    def return_domestic_update_boy(self):
+    def return_domestic_update_body(self):
         """
         build domestic body from items
         :return:
