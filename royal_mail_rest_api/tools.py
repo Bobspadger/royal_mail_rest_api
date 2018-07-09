@@ -1,7 +1,337 @@
 import datetime
 from royal_mail_rest_api.errors import *
+from collections import namedtuple
+
+valid_service = namedtuple('valid_service',
+                           'serviceType serviceOffering serviceFormat enhancementType signatureTracked safePlace')
+
 
 class RoyalMailBody:
+    valid_services = [valid_service('H', 'BF1', 'E', None, None, None),
+                      valid_service('H', 'BF1', 'G', None, None, None),
+                      valid_service('H', 'BF1', 'P', None, None, None),
+                      valid_service('H', 'BF2', 'E', None, None, None),
+                      valid_service('H', 'BF2', 'G', None, None, None),
+                      valid_service('H', 'BF2', 'P', None, None, None),
+                      valid_service('H', 'BF7', 'N', None, None, None),
+                      valid_service('H', 'BF8', 'N', None, None, None),
+                      valid_service('H', 'BF9', 'N', None, None, None),
+                      valid_service('1', 'CRL', 'F', '6', None, None),
+                      valid_service('1', 'CRL', 'F', None, None, None),
+                      valid_service('1', 'CRL', 'P', '6', None, None),
+                      valid_service('1', 'CRL', 'P', None, None, None),
+                      valid_service('2', 'CRL', 'F', '6', None, None),
+                      valid_service('2', 'CRL', 'F', None, None, None),
+                      valid_service('2', 'CRL', 'P', '6', None, None),
+                      valid_service('2', 'CRL', 'P', None, None, None),
+                      valid_service('I', 'DE1', 'E', None, None, None),
+                      valid_service('I', 'DE3', 'E', None, None, None),
+                      valid_service('I', 'DE4', 'E', None, None, None),
+                      valid_service('I', 'DE6', 'E', None, None, None),
+                      valid_service('I', 'DG1', 'G', None, None, None),
+                      valid_service('I', 'DG3', 'G', None, None, None),
+                      valid_service('I', 'DG4', 'G', None, None, None),
+                      valid_service('I', 'DG6', 'G', None, None, None),
+                      valid_service('I', 'DW1', 'E', None, None, None),
+                      valid_service('1', 'FS1', 'F', None, None, None),
+                      valid_service('2', 'FS2', 'F', None, None, None),
+                      valid_service('I', 'IE1', 'E', None, None, None),
+                      valid_service('I', 'IE3', 'E', None, None, None),
+                      valid_service('I', 'IG1', 'G', None, None, None),
+                      valid_service('I', 'IG3', 'G', None, None, None),
+                      valid_service('I', 'IG4', 'G', None, None, None),
+                      valid_service('I', 'IG6', 'G', None, None, None),
+                      valid_service('I', 'MB1', 'E', None, None, None),
+                      valid_service('I', 'MB1', 'N', None, None, None),
+                      valid_service('I', 'MB2', 'N', None, None, None),
+                      valid_service('I', 'MB3', 'N', None, None, None),
+                      valid_service('I', 'MP0', 'E', None, None, None),
+                      valid_service('I', 'MP1', 'E', None, None, None),
+                      valid_service('I', 'MP4', 'E', None, None, None),
+                      valid_service('I', 'MP5', 'E', None, None, None),
+                      valid_service('I', 'MP6', 'E', None, None, None),
+                      valid_service('I', 'MP7', 'E', None, None, None),
+                      valid_service('I', 'MP8', 'E', None, None, None),
+                      valid_service('I', 'MP9', 'E', None, None, None),
+                      valid_service('I', 'MTA', 'E', None, None, None),
+                      valid_service('I', 'MTB', 'E', None, None, None),
+                      valid_service('I', 'MTC', 'G', None, None, None),
+                      valid_service('I', 'MTC', 'P', None, None, None),
+                      valid_service('I', 'MTD', 'G', None, None, None),
+                      valid_service('I', 'MTD', 'P', None, None, None),
+                      valid_service('I', 'MTE', 'E', None, None, None),
+                      valid_service('I', 'MTF', 'E', None, None, None),
+                      valid_service('I', 'MTG', 'G', None, None, None),
+                      valid_service('I', 'MTH', 'G', None, None, None),
+                      valid_service('I', 'MTI', 'G', None, None, None),
+                      valid_service('I', 'MTI', 'P', None, None, None),
+                      valid_service('I', 'MTJ', 'G', None, None, None),
+                      valid_service('I', 'MTJ', 'P', None, None, None),
+                      valid_service('I', 'MTK', 'G', None, None, None),
+                      valid_service('I', 'MTL', 'G', None, None, None),
+                      valid_service('I', 'MTM', 'G', None, None, None),
+                      valid_service('I', 'MTM', 'P', None, None, None),
+                      valid_service('I', 'MTN', 'G', None, None, None),
+                      valid_service('I', 'MTN', 'P', None, None, None),
+                      valid_service('I', 'MTO', 'G', None, None, None),
+                      valid_service('I', 'MTP', 'G', None, None, None),
+                      valid_service('I', 'MTQ', 'E', None, None, None),
+                      valid_service('I', 'MTS', 'E', None, None, None),
+                      valid_service('I', 'OLA', 'E', None, None, None),
+                      valid_service('I', 'OLA', 'G', None, None, None),
+                      valid_service('I', 'OLA', 'N', None, None, None),
+                      valid_service('I', 'OLA', 'P', None, None, None),
+                      valid_service('I', 'OLS', 'E', None, None, None),
+                      valid_service('I', 'OLS', 'G', None, None, None),
+                      valid_service('I', 'OLS', 'N', None, None, None),
+                      valid_service('I', 'OLS', 'P', None, None, None),
+                      valid_service('I', 'OSA', 'E', None, None, None),
+                      valid_service('I', 'OSA', 'G', None, None, None),
+                      valid_service('I', 'OSA', 'P', None, None, None),
+                      valid_service('I', 'OSB', 'E', None, None, None),
+                      valid_service('I', 'OSB', 'G', None, None, None),
+                      valid_service('I', 'OSB', 'P', None, None, None),
+                      valid_service('I', 'OTA', 'E', None, None, None),
+                      valid_service('I', 'OTA', 'G', None, None, None),
+                      valid_service('I', 'OTA', 'P', None, None, None),
+                      valid_service('I', 'OTB', 'E', None, None, None),
+                      valid_service('I', 'OTB', 'G', None, None, None),
+                      valid_service('I', 'OTB', 'P', None, None, None),
+                      valid_service('I', 'OTC', 'E', None, None, None),
+                      valid_service('I', 'OTC', 'G', None, None, None),
+                      valid_service('I', 'OTC', 'P', None, None, None),
+                      valid_service('I', 'OTD', 'E', None, None, None),
+                      valid_service('I', 'OTD', 'G', None, None, None),
+                      valid_service('I', 'OTD', 'P', None, None, None),
+                      valid_service('I', 'OZ1', 'N', None, None, None),
+                      valid_service('I', 'OZ3', 'N', None, None, None),
+                      valid_service('I', 'OZ4', 'N', None, None, None),
+                      valid_service('I', 'OZ6', 'N', None, None, None),
+                      valid_service('2', 'PK0', 'F', '6', None, None),
+                      valid_service('2', 'PK0', 'F', None, None, None),
+                      valid_service('1', 'PK1', 'P', '6', None, None),
+                      valid_service('1', 'PK1', 'P', None, None, None),
+                      valid_service('2', 'PK2', 'P', '6', None, None),
+                      valid_service('2', 'PK2', 'P', None, None, None),
+                      valid_service('1', 'PK3', 'F', '6', None, None),
+                      valid_service('1', 'PK3', 'F', None, None, None),
+                      valid_service('1', 'PK3', 'P', '6', None, None),
+                      valid_service('1', 'PK3', 'P', None, None, None),
+                      valid_service('2', 'PK4', 'F', '6', None, None),
+                      valid_service('2', 'PK4', 'F', None, None, None),
+                      valid_service('2', 'PK4', 'P', '6', None, None),
+                      valid_service('2', 'PK4', 'P', None, None, None),
+                      valid_service('1', 'PK9', 'F', '6', None, None),
+                      valid_service('1', 'PK9', 'F', None, None, None),
+                      valid_service('1', 'PPF', 'P', '6', None, None),
+                      valid_service('1', 'PPF', 'P', None, None, None),
+                      valid_service('2', 'PPF', 'P', '6', None, None),
+                      valid_service('2', 'PPF', 'P', None, None, None),
+                      valid_service('I', 'PS0', 'E', None, None, None),
+                      valid_service('I', 'PS7', 'G', None, None, None),
+                      valid_service('I', 'PS8', 'G', None, None, None),
+                      valid_service('I', 'PS9', 'E', None, None, None),
+                      valid_service('I', 'PSB', 'G', None, None, None),
+                      valid_service('I', 'PSC', 'E', None, None, None),
+                      valid_service('R', 'PT1', 'N', None, None, None),
+                      valid_service('R', 'PT2', 'N', None, None, None),
+                      valid_service('1', 'PX0', 'A', None, None, None),
+                      valid_service('1', 'PX0', 'F', None, None, None),
+                      valid_service('1', 'PX0', 'P', None, None, None),
+                      valid_service('1', 'PX1', 'A', None, None, None),
+                      valid_service('1', 'PX1', 'F', None, None, None),
+                      valid_service('1', 'PX1', 'P', None, None, None),
+                      valid_service('2', 'PX2', 'A', None, None, None),
+                      valid_service('2', 'PX2', 'F', None, None, None),
+                      valid_service('2', 'PX2', 'P', None, None, None),
+                      valid_service('1', 'PY1', 'F', None, None, None),
+                      valid_service('2', 'PY2', 'F', None, None, None),
+                      valid_service('1', 'PY3', 'F', None, None, None),
+                      valid_service('2', 'PY4', 'F', None, None, None),
+                      valid_service('1', 'PZ4', 'A', None, None, None),
+                      valid_service('1', 'PZ4', 'F', None, None, None),
+                      valid_service('1', 'PZ4', 'P', None, None, None),
+                      valid_service('2', 'PZ5', 'A', None, None, None),
+                      valid_service('2', 'PZ5', 'F', None, None, None),
+                      valid_service('2', 'PZ5', 'P', None, None, None),
+                      valid_service('2', 'RM0', 'P', '6', None, None),
+                      valid_service('2', 'RM0', 'P', None, None, None),
+                      valid_service('1', 'RM1', 'F', '6', None, None),
+                      valid_service('1', 'RM1', 'F', None, None, None),
+                      valid_service('1', 'RM2', 'P', '6', None, None),
+                      valid_service('1', 'RM2', 'P', None, None, None),
+                      valid_service('2', 'RM3', 'F', '6', None, None),
+                      valid_service('2', 'RM3', 'F', None, None, None),
+                      valid_service('2', 'RM4', 'P', '6', None, None),
+                      valid_service('2', 'RM4', 'P', None, None, None),
+                      valid_service('1', 'RM5', 'F', '6', None, None),
+                      valid_service('1', 'RM5', 'F', None, None, None),
+                      valid_service('1', 'RM5', 'P', '6', None, None),
+                      valid_service('1', 'RM5', 'P', None, None, None),
+                      valid_service('2', 'RM6', 'F', '6', None, None),
+                      valid_service('2', 'RM6', 'F', None, None, None),
+                      valid_service('2', 'RM6', 'P', '6', None, None),
+                      valid_service('2', 'RM6', 'P', None, None, None),
+                      valid_service('1', 'RM7', 'F', '6', None, None),
+                      valid_service('1', 'RM7', 'F', None, None, None),
+                      valid_service('1', 'RM8', 'P', '6', None, None),
+                      valid_service('1', 'RM8', 'P', None, None, None),
+                      valid_service('2', 'RM9', 'F', '6', None, None),
+                      valid_service('2', 'RM9', 'F', None, None, None),
+                      valid_service('D', 'SD1', 'N', '1', None, None),
+                      valid_service('D', 'SD1', 'N', '2', None, None),
+                      valid_service('D', 'SD1', 'N', '3', None, None),
+                      valid_service('D', 'SD1', 'N', '4', None, None),
+                      valid_service('D', 'SD1', 'N', '5', None, None),
+                      valid_service('D', 'SD1', 'N', '14', None, None),
+                      valid_service('D', 'SD1', 'N', '13', None, None),
+                      valid_service('D', 'SD1', 'N', '16', None, None),
+                      valid_service('D', 'SD1', 'N', '22', None, None),
+                      valid_service('D', 'SD1', 'N', '24', None, None),
+                      valid_service('D', 'SD1', 'N', None, None, None),
+                      valid_service('D', 'SD2', 'N', '1', None, None),
+                      valid_service('D', 'SD2', 'N', '2', None, None),
+                      valid_service('D', 'SD2', 'N', '3', None, None),
+                      valid_service('D', 'SD2', 'N', '4', None, None),
+                      valid_service('D', 'SD2', 'N', '5', None, None),
+                      valid_service('D', 'SD2', 'N', '14', None, None),
+                      valid_service('D', 'SD2', 'N', '13', None, None),
+                      valid_service('D', 'SD2', 'N', '16', None, None),
+                      valid_service('D', 'SD2', 'N', '22', None, None),
+                      valid_service('D', 'SD2', 'N', '24', None, None),
+                      valid_service('D', 'SD2', 'N', None, None, None),
+                      valid_service('D', 'SD3', 'N', '1', None, None),
+                      valid_service('D', 'SD3', 'N', '2', None, None),
+                      valid_service('D', 'SD3', 'N', '3', None, None),
+                      valid_service('D', 'SD3', 'N', '4', None, None),
+                      valid_service('D', 'SD3', 'N', '5', None, None),
+                      valid_service('D', 'SD3', 'N', '14', None, None),
+                      valid_service('D', 'SD3', 'N', '13', None, None),
+                      valid_service('D', 'SD3', 'N', '16', None, None),
+                      valid_service('D', 'SD3', 'N', '22', None, None),
+                      valid_service('D', 'SD3', 'N', '24', None, None),
+                      valid_service('D', 'SD3', 'N', None, None, None),
+                      valid_service('D', 'SD4', 'N', '1', None, None),
+                      valid_service('D', 'SD4', 'N', '2', None, None),
+                      valid_service('D', 'SD4', 'N', '3', None, None),
+                      valid_service('D', 'SD4', 'N', '4', None, None),
+                      valid_service('D', 'SD4', 'N', '5', None, None),
+                      valid_service('D', 'SD4', 'N', '14', None, None),
+                      valid_service('D', 'SD4', 'N', '13', None, None),
+                      valid_service('D', 'SD4', 'N', '16', None, None),
+                      valid_service('D', 'SD4', 'N', '22', None, None),
+                      valid_service('D', 'SD4', 'N', '24', None, None),
+                      valid_service('D', 'SD4', 'N', None, None, None),
+                      valid_service('D', 'SD5', 'N', '1', None, None),
+                      valid_service('D', 'SD5', 'N', '2', None, None),
+                      valid_service('D', 'SD5', 'N', '3', None, None),
+                      valid_service('D', 'SD5', 'N', '4', None, None),
+                      valid_service('D', 'SD5', 'N', '5', None, None),
+                      valid_service('D', 'SD5', 'N', '14', None, None),
+                      valid_service('D', 'SD5', 'N', '13', None, None),
+                      valid_service('D', 'SD5', 'N', '16', None, None),
+                      valid_service('D', 'SD5', 'N', '22', None, None),
+                      valid_service('D', 'SD5', 'N', '24', None, None),
+                      valid_service('D', 'SD5', 'N', None, None, None),
+                      valid_service('D', 'SD6', 'N', '1', None, None),
+                      valid_service('D', 'SD6', 'N', '2', None, None),
+                      valid_service('D', 'SD6', 'N', '3', None, None),
+                      valid_service('D', 'SD6', 'N', '4', None, None),
+                      valid_service('D', 'SD6', 'N', '5', None, None),
+                      valid_service('D', 'SD6', 'N', '14', None, None),
+                      valid_service('D', 'SD6', 'N', '13', None, None),
+                      valid_service('D', 'SD6', 'N', '16', None, None),
+                      valid_service('D', 'SD6', 'N', '22', None, None),
+                      valid_service('D', 'SD6', 'N', '24', None, None),
+                      valid_service('D', 'SD6', 'N', None, None, None),
+                      valid_service('1', 'STL', 'F', '6', None, None),
+                      valid_service('1', 'STL', 'F', None, None, None),
+                      valid_service('1', 'STL', 'L', '6', None, None),
+                      valid_service('1', 'STL', 'L', None, None, None),
+                      valid_service('1', 'STL', 'P', '6', None, None),
+                      valid_service('1', 'STL', 'P', None, None, None),
+                      valid_service('2', 'STL', 'F', '6', None, None),
+                      valid_service('2', 'STL', 'F', None, None, None),
+                      valid_service('2', 'STL', 'L', '6', None, None),
+                      valid_service('2', 'STL', 'L', None, None, None),
+                      valid_service('2', 'STL', 'P', '6', None, None),
+                      valid_service('2', 'STL', 'P', None, None, None),
+                      valid_service('T', 'TPL', 'N', '14', '0', '1'),
+                      valid_service('T', 'TPL', 'N', '13', '0', '1'),
+                      valid_service('T', 'TPL', 'N', '16', '0', '1'),
+                      valid_service('T', 'TPL', 'N', None, '0', '1'),
+                      valid_service('T', 'TPL', 'N', '14', '1', '0'),
+                      valid_service('T', 'TPL', 'N', '13', '1', '0'),
+                      valid_service('T', 'TPL', 'N', '16', '1', '0'),
+                      valid_service('T', 'TPL', 'N', None, '1', '0'),
+                      valid_service('T', 'TPL', 'N', '22', None, None),
+                      valid_service('T', 'TPM', 'N', '14', '0', '1'),
+                      valid_service('T', 'TPM', 'N', '13', '0', '1'),
+                      valid_service('T', 'TPM', 'N', '16', '0', '1'),
+                      valid_service('T', 'TPM', 'N', None, '0', '1'),
+                      valid_service('T', 'TPM', 'N', '14', '1', '0'),
+                      valid_service('T', 'TPM', 'N', '13', '1', '0'),
+                      valid_service('T', 'TPM', 'N', '16', '1', '0'),
+                      valid_service('T', 'TPM', 'N', None, '1', '0'),
+                      valid_service('T', 'TPM', 'N', '22', None, None),
+                      valid_service('T', 'TPN', 'N', '14', '0', '1'),
+                      valid_service('T', 'TPN', 'N', '13', '0', '1'),
+                      valid_service('T', 'TPN', 'N', '16', '0', '1'),
+                      valid_service('T', 'TPN', 'N', None, '0', '1'),
+                      valid_service('T', 'TPN', 'N', '14', '1', '0'),
+                      valid_service('T', 'TPN', 'N', '13', '1', '0'),
+                      valid_service('T', 'TPN', 'N', '16', '1', '0'),
+                      valid_service('T', 'TPN', 'N', None, '1', '0'),
+                      valid_service('T', 'TPN', 'N', '22', None, None),
+                      valid_service('T', 'TPS', 'N', '14', '0', '1'),
+                      valid_service('T', 'TPS', 'N', '13', '0', '1'),
+                      valid_service('T', 'TPS', 'N', '16', '0', '1'),
+                      valid_service('T', 'TPS', 'N', None, '0', '1'),
+                      valid_service('T', 'TPS', 'N', '14', '1', '0'),
+                      valid_service('T', 'TPS', 'N', '13', '1', '0'),
+                      valid_service('T', 'TPS', 'N', '16', '1', '0'),
+                      valid_service('T', 'TPS', 'N', None, '1', '0'),
+                      valid_service('T', 'TPS', 'N', '22', None, None),
+                      valid_service('T', 'TRL', 'N', '14', None, None),
+                      valid_service('T', 'TRL', 'N', '13', None, None),
+                      valid_service('T', 'TRL', 'N', '16', None, None),
+                      valid_service('T', 'TRL', 'N', '22', None, None),
+                      valid_service('T', 'TRL', 'N', None, None, None),
+                      valid_service('T', 'TRM', 'N', '14', None, None),
+                      valid_service('T', 'TRM', 'N', '13', None, None),
+                      valid_service('T', 'TRM', 'N', '16', None, None),
+                      valid_service('T', 'TRM', 'N', '22', None, None),
+                      valid_service('T', 'TRM', 'N', None, None, None),
+                      valid_service('T', 'TRN', 'N', '14', '0', '1'),
+                      valid_service('T', 'TRN', 'N', '13', '0', '1'),
+                      valid_service('T', 'TRN', 'N', '16', '0', '1'),
+                      valid_service('T', 'TRN', 'N', None, '0', '1'),
+                      valid_service('T', 'TRN', 'N', '14', '1', '0'),
+                      valid_service('T', 'TRN', 'N', '13', '1', '0'),
+                      valid_service('T', 'TRN', 'N', '16', '1', '0'),
+                      valid_service('T', 'TRN', 'N', None, '1', '0'),
+                      valid_service('T', 'TRN', 'N', '22', None, None),
+                      valid_service('T', 'TRS', 'N', '14', '0', '1'),
+                      valid_service('T', 'TRS', 'N', '13', '0', '1'),
+                      valid_service('T', 'TRS', 'N', '16', '0', '1'),
+                      valid_service('T', 'TRS', 'N', None, '0', '1'),
+                      valid_service('T', 'TRS', 'N', '14', '1', '0'),
+                      valid_service('T', 'TRS', 'N', '13', '1', '0'),
+                      valid_service('T', 'TRS', 'N', '16', '1', '0'),
+                      valid_service('T', 'TRS', 'N', None, '1', '0'),
+                      valid_service('T', 'TRS', 'N', '22', None, None),
+                      valid_service('I', 'WE1', 'E', None, None, None),
+                      valid_service('I', 'WE3', 'E', None, None, None),
+                      valid_service('I', 'WG1', 'G', None, None, None),
+                      valid_service('I', 'WG3', 'G', None, None, None),
+                      valid_service('I', 'WG4', 'G', None, None, None),
+                      valid_service('I', 'WG6', 'G', None, None, None),
+                      valid_service('I', 'WW1', 'N', None, None, None),
+                      valid_service('I', 'WW3', 'N', None, None, None),
+                      valid_service('I', 'WW4', 'N', None, None, None),
+                      valid_service('I', 'WW6', 'N', None, None, None),
+                      valid_service('I', 'ZC1', 'N', None, None, None), ]
+
     service_formats = {
         'inland_large_letter': 'F',
         'inland_letter': 'L',
@@ -147,7 +477,7 @@ class RoyalMailBody:
         "sms_notification": "13",
         "e-mail_notification": "14",
         "safeplace": "15",
-        "sms_and_e-mail_notification": "16",
+        # "sms_and_e-mail_notification": "16",
         "local_collect": "22",
         "saturday_guaranteed": "24",
     }
@@ -242,7 +572,7 @@ class RoyalMailBody:
         if isinstance(date_obj, datetime.datetime):
             self.shipping_date = datetime.datetime.strftime(date_obj, '%Y-%m-%d')
         else:
-            raise(TypeError('Sorry, need a datetime object'))
+            raise (TypeError('Sorry, need a datetime object'))
 
     def _add_service(self):
         """
@@ -256,7 +586,7 @@ class RoyalMailBody:
             "type": self.service_type,
             "signature": self.signature,
             "enhancements": self.enhancements
-            }
+        }
 
         return service
 
@@ -267,11 +597,10 @@ class RoyalMailBody:
         :return:
         """
         if format is None:
-            raise(ValueError('No service format selected'))
+            raise (ValueError('No service format selected'))
         if format not in self.service_formats:
-            raise(KeyError('Invalid service format'))
+            raise (KeyError('Invalid service format'))
         self.service_format = self.service_formats[format]
-
 
     def add_service_type(self, service_type=None):
 
@@ -282,13 +611,11 @@ class RoyalMailBody:
         """
 
         if service_type is None:
-            raise(ValueError('no service type selected'))
+            raise (ValueError('no service type selected'))
 
         if service_type not in self.service_types:
-            raise(KeyError('Invalid service type'))
+            raise (KeyError('Invalid service type'))
         self.service_type = self.service_types[service_type]
-
-
 
     def add_service_offering(self, service_offering=None):
         """
@@ -298,16 +625,14 @@ class RoyalMailBody:
         """
 
         if service_offering is None:
-            raise(ValueError('No service type selected'))
+            raise (ValueError('No service type selected'))
         if service_offering not in self.service_offerings:
-            raise(KeyError('Invalid service type'))
+            raise (KeyError('Invalid service type'))
         self.service_offering = self.service_offerings[service_offering]
-
 
     def add_service_occurence(self):
         # TODO - what is this, can't find anything in the docs
         self.service_occurence = 1
-
 
     def add_signature(self, signature=False):
         """
@@ -318,8 +643,7 @@ class RoyalMailBody:
         if isinstance(signature, bool):
             self.signature = signature
         else:
-            raise(TypeError('Must be a boolean, True or False'))
-
+            raise (TypeError('Must be a boolean, True or False'))
 
     def add_service_enhancements(self, enhancement):
         """
@@ -328,11 +652,10 @@ class RoyalMailBody:
         :return:
         """
         if enhancement is None:
-            raise(ValueError('No Enhancement Selected'))
+            raise (ValueError('No Enhancement Selected'))
         if enhancement not in self.service_enhancements:
-            raise(KeyError('Not in service_enhancements'))
+            raise (KeyError('Not in service_enhancements'))
         self.enhancements.append(self.service_enhancements[enhancement])
-
 
     def add_receipient_contact(self, name, email, complementary_name=None, telephone=None):
         """
@@ -401,4 +724,6 @@ class RoyalMailBody:
         # address = self.remove_none_values(address)
         self.address = address
 
-
+    def _check_valid_service(self):
+        check_service = valid_service(self.service_type, self.service_offering,
+                                      self.service_format, self.enhancement)
